@@ -1,0 +1,108 @@
+Semangat Pagi Bapak/Ibu semua , berikut terlampir link test dari Jojonomic :
+Berikut Link Soalnya :
+
+Frontend: https://codepen.io/iman-suherman/pen/JjRMYzG 
+Backend: https://bitbucket.org/jojocoders/document-service/src/master/
+
+
+
+google form jawaban : 
+https://forms.gle/zkH1jjg1AGKMy6RX7
+
+//1 Import css
+import "./Home.css";
+import { useEffect, useState } from "react";
+
+//2 buat component Home
+const Home = () => {
+  //State merupakan sebuah data yang tersimpan di masing masing compoent React,
+  //pada Functional component react, state dibuat dengan cara mengimport sebuah function bawaan react bernama useState
+  // state terbuat dari array yang berisi 2 buah variable, variable pertama adalah sebuah variable penyimpan nilai state,
+  //dan variable kedua merupakan FUnction untuk merubah nilai variable pertama..
+
+  //proses sebelum component terlihat/lifecycle
+
+  useEffect(() => {
+    //alert("Selamat Datang");
+
+    //tarik data dari API
+    // api adalah application interface
+
+    //function promise/sync data bawaan js yaitu fecth
+    //fetch('url dari api/endpont', {options(tipe data object)})
+    // mode cors adalah mode perijinan
+    fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        //  console.log (data);
+        setPosts(data);
+      });
+
+    //baut state penampung nilai data dari API
+  }, []);
+
+  const [posts, setPosts] = useState();
+
+  const [homeData, setHomeData] = useState("Jarkoni");
+
+  return (
+    <section className="home" id="home">
+      <h1>Home Page</h1>
+      <h3>Selamat datang {homeData} </h3>
+
+      <input
+        type="text"
+        onChange={(e) => {
+          setHomeData(e.target.value);
+        }}
+      />
+
+      <table>
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>body</th>
+          </tr>
+        </thead>
+
+        {/* kita buat conditional rendering disini agar tidak eror ketika di refresh di untunk menampilkan data json */}
+        {posts ? (
+          <tbody>
+            {/* map adalah sebauh function untuk memetakan data kita */}
+
+            {posts.map((e) => {
+              return (
+                <tr
+                  key={e.id}
+                  style={{
+                    background: e.id % 2 === 0 ? "lightGrey" : null,
+                  }}
+                >
+                  <td>{e.id}</td>
+                  <td>{e.title}</td>
+                  <td>{e.body}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        ) : (
+          <tbody>
+            <tr>
+              <td>wait</td>
+            </tr>
+          </tbody>
+        )}
+      </table>
+    </section>
+  );
+};
+
+//3 export component Home
+export default Home;
